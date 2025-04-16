@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Viewport Units Toggle Demo</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background: #f0f0f0;
+        }
+
+        header {
+            position: fixed;
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 999;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(6px);
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: rgba(0, 0, 0, 0.1);
+            color: #333;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        button.active {
+            background: #007BFF;
+            color: white;
+        }
+
+        .viewport-box {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .vh  { background: #FF6B6B; height: 100vh; }
+        .svh { background: #4ECDC4; height: 100svh; }
+        .lvh { background: #1A535C; height: 100lvh; }
+        .dvh { background: #FF9F1C; height: 100dvh; }
+
+        .visible {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <button data-target="vh" class="active">100vh</button>
+    <button data-target="svh">100svh</button>
+    <button data-target="lvh">100lvh</button>
+    <button data-target="dvh">100dvh</button>
+</header>
+
+<main>
+    <section id="vh" class="viewport-box vh visible">100vh</section>
+    <section id="svh" class="viewport-box svh">100svh</section>
+    <section id="lvh" class="viewport-box lvh">100lvh</section>
+    <section id="dvh" class="viewport-box dvh">100dvh</section>
+</main>
+
+<script>
+    const buttons = document.querySelectorAll("button");
+    const boxes = document.querySelectorAll(".viewport-box");
+
+    buttons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            buttons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            boxes.forEach(box => box.classList.remove("visible"));
+            const targetId = btn.getAttribute("data-target");
+            document.getElementById(targetId).classList.add("visible");
+        });
+    });
+</script>
+
+</body>
+</html>
