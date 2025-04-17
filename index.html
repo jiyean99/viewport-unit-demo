@@ -2,23 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Viewport Units Toggle Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Viewport Units Grid</title>
     <style>
         * { box-sizing: border-box; }
-        body {
+        html, body {
             margin: 0;
+            padding: 0;
+            height: 100%;
             font-family: sans-serif;
-            background: #f0f0f0;
         }
 
         header {
             position: fixed;
-            top: 5%;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.7);
-            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
             display: flex;
             gap: 0.5rem;
             z-index: 999;
@@ -28,7 +29,7 @@
         }
 
         button {
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.8rem;
             border: none;
             background: rgba(0, 0, 0, 0.1);
             color: #333;
@@ -43,56 +44,83 @@
             color: white;
         }
 
-        .viewport-box {
+        .unit-container {
             display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: white;
-            text-align: center;
-            padding: 1rem;
-        }
-
-        .vh  { background: #FF6B6B; height: 100vh; }
-        .svh { background: #4ECDC4; height: 100svh; }
-        .lvh { background: #1A535C; height: 100lvh; }
-        .dvh { background: #FF9F1C; height: 100dvh; }
-
-        .visible {
-            display: flex;
             flex-direction: column;
         }
+
+        .unit-container.visible {
+            display: flex;
+        }
+
+        .block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .block:nth-child(odd) { background: #FF6B6B; }
+        .block:nth-child(even) { background: #FF8E72; }
+
+        .block.svh:nth-child(odd) { background: #1A535C; }
+        .block.svh:nth-child(even) { background: #4ECDC4; }
+
+        .block.lvh:nth-child(odd) { background: #FF9F1C; }
+        .block.lvh:nth-child(even) { background: #FFD8A8; }
+
+        .block.dvh:nth-child(odd) { background: #B565A7; }
+        .block.dvh:nth-child(even) { background: #D4A6D4; }
+
     </style>
 </head>
 <body>
 
 <header>
-    <button data-target="vh" class="active">100vh</button>
-    <button data-target="svh">100svh</button>
-    <button data-target="lvh">100lvh</button>
-    <button data-target="dvh">100dvh</button>
+    <button data-unit="vh" class="active">vh</button>
+    <button data-unit="svh">svh</button>
+    <button data-unit="lvh">lvh</button>
+    <button data-unit="dvh">dvh</button>
 </header>
 
 <main>
-    <section id="vh" class="viewport-box vh visible">100vh</section>
-    <section id="svh" class="viewport-box svh">100svh</section>
-    <section id="lvh" class="viewport-box lvh">100lvh</section>
-    <section id="dvh" class="viewport-box dvh">100dvh</section>
+    <div id="vh" class="unit-container visible"></div>
+    <div id="svh" class="unit-container"></div>
+    <div id="lvh" class="unit-container"></div>
+    <div id="dvh" class="unit-container"></div>
 </main>
 
 <script>
-    const buttons = document.querySelectorAll("button");
-    const boxes = document.querySelectorAll(".viewport-box");
+    const units = ["vh", "svh", "lvh", "dvh"];
 
-    buttons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            buttons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
+    units.forEach(unit => {
+        const container = document.getElementById(unit);
+        for (let i = 1; i <= 10; i++) {
+            const block = document.createElement("div");
+            block.className = `block ${unit}`; // <-- 단위 클래스명 추가
+            block.style.height = `10${unit}`;
+            const value = i * 10;
+            block.textContent = `${value}${unit}`;
+            container.appendChild(block);
+        }
+    });
 
-            boxes.forEach(box => box.classList.remove("visible"));
-            const targetId = btn.getAttribute("data-target");
-            document.getElementById(targetId).classList.add("visible");
+    const buttons = document.querySelectorAll("header button");
+    const containers = document.querySelectorAll(".unit-container");
+
+    buttons.forEach(button => {
+        button.addEventListener("click", () => {
+            buttons.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            const target = button.getAttribute("data-unit");
+
+            containers.forEach(container => {
+                container.classList.remove("visible");
+            });
+            document.getElementById(target).classList.add("visible");
         });
     });
 </script>
