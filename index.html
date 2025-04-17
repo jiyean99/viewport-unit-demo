@@ -74,6 +74,80 @@
         .block.dvh:nth-child(odd) { background: #B565A7; }
         .block.dvh:nth-child(even) { background: #D4A6D4; }
 
+        .scroll-container {
+            position: relative;
+            height: 100vh; /* 화면 전체 높이 */
+            background: #ffffff;  /* 흰색 배경 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .scroll-text {
+            font-size: 1.5rem;
+            color: #333;  /* 검정색 텍스트 */
+            background-color: rgba(255, 255, 255, 0.7); /* 약간의 투명도를 가진 흰색 배경 */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 80%;
+            line-height: 1.5;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);  /* 가벼운 그림자 효과 */
+        }
+
+        .icon-container {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+        }
+
+        .info-icon {
+            font-size: 2rem;
+            background: #007BFF;
+            color: white;
+            border: none;
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
+            aspect-ratio: 1;
+        }
+
+        .info-icon:hover {
+            background: #1A535C;
+        }
+
+        .bubble-message {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            animation: bubble-appear 0.3s ease-out forwards;
+        }
+
+        @keyframes bubble-appear {
+            0% {
+                transform: translateX(-50%) scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -90,16 +164,23 @@
     <div id="svh" class="unit-container"></div>
     <div id="lvh" class="unit-container"></div>
     <div id="dvh" class="unit-container"></div>
+    <div class="scroll-container">
+        <div class="icon-container">
+            <button class="info-icon">i</button>
+        </div>
+        <p class="bubble-message" id="bubble-message">스크롤 시 주소창이 사라지는걸 의도하기 위해 임의로 추가한 영역입니다.</p>
+    </div>
 </main>
 
 <script>
+    /** 10단위씩 block 박스 생성 */
     const units = ["vh", "svh", "lvh", "dvh"];
 
     units.forEach(unit => {
         const container = document.getElementById(unit);
         for (let i = 1; i <= 10; i++) {
             const block = document.createElement("div");
-            block.className = `block ${unit}`; // <-- 단위 클래스명 추가
+            block.className = `block ${unit}`;
             block.style.height = `10${unit}`;
             const value = i * 10;
             block.textContent = `${value}${unit}`;
@@ -107,6 +188,7 @@
         }
     });
 
+    /** 상단 버튼 토글 기능 */
     const buttons = document.querySelectorAll("header button");
     const containers = document.querySelectorAll(".unit-container");
 
@@ -123,6 +205,21 @@
             document.getElementById(target).classList.add("visible");
         });
     });
+
+    /** 하단 스크롤 영역 내 info 버튼 */
+    const infoIcon = document.querySelector(".info-icon");
+    const bubbleMessage = document.getElementById("bubble-message");
+
+    infoIcon.addEventListener("click", () => {
+        // 버블 메시지 보이기
+        bubbleMessage.style.display = "block";
+
+        // 3초 후에 메시지 사라지게 하기
+        setTimeout(() => {
+            bubbleMessage.style.display = "none";
+        }, 3000);  // 3초 후에 버블 메시지 사라짐
+    });
+
 </script>
 
 </body>
